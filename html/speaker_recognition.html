@@ -1,0 +1,723 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>speaker_recognition</title><meta name="generator" content="MATLAB 9.1"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2017-01-22"><meta name="DC.source" content="speaker_recognition.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; } 
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><pre class="codeinput"><span class="keyword">function</span> varargout = speaker_recognition(varargin)
+<span class="comment">% SPEAKER_RECOGNITION MATLAB code for speaker_recognition.fig</span>
+<span class="comment">%      SPEAKER_RECOGNITION, by itself, creates a new SPEAKER_RECOGNITION or raises the existing</span>
+<span class="comment">%      singleton*.</span>
+<span class="comment">%</span>
+<span class="comment">%      H = SPEAKER_RECOGNITION returns the handle to a new SPEAKER_RECOGNITION or the handle to</span>
+<span class="comment">%      the existing singleton*.</span>
+<span class="comment">%</span>
+<span class="comment">%      SPEAKER_RECOGNITION('CALLBACK',hObject,eventData,handles,...) calls the local</span>
+<span class="comment">%      function named CALLBACK in SPEAKER_RECOGNITION.M with the given input arguments.</span>
+<span class="comment">%</span>
+<span class="comment">%      SPEAKER_RECOGNITION('Property','Value',...) creates a new SPEAKER_RECOGNITION or raises the</span>
+<span class="comment">%      existing singleton*.  Starting from the left, property value pairs are</span>
+<span class="comment">%      applied to the GUI before speaker_recognition_OpeningFcn gets called.  An</span>
+<span class="comment">%      unrecognized property name or invalid value makes property application</span>
+<span class="comment">%      stop.  All inputs are passed to speaker_recognition_OpeningFcn via varargin.</span>
+<span class="comment">%</span>
+<span class="comment">%      *See GUI Options on GUIDE's Tools menu.  Choose "GUI allows only one</span>
+<span class="comment">%      instance to run (singleton)".</span>
+<span class="comment">%</span>
+<span class="comment">% See also: GUIDE, GUIDATA, GUIHANDLES</span>
+
+<span class="comment">% Edit the above text to modify the response to help speaker_recognition</span>
+
+<span class="comment">% Last Modified by GUIDE v2.5 22-Jan-2017 12:26:21</span>
+
+<span class="comment">% Begin initialization code - DO NOT EDIT</span>
+gui_Singleton = 1;
+gui_State = struct(<span class="string">'gui_Name'</span>,       mfilename, <span class="keyword">...</span>
+                   <span class="string">'gui_Singleton'</span>,  gui_Singleton, <span class="keyword">...</span>
+                   <span class="string">'gui_OpeningFcn'</span>, @speaker_recognition_OpeningFcn, <span class="keyword">...</span>
+                   <span class="string">'gui_OutputFcn'</span>,  @speaker_recognition_OutputFcn, <span class="keyword">...</span>
+                   <span class="string">'gui_LayoutFcn'</span>,  [] , <span class="keyword">...</span>
+                   <span class="string">'gui_Callback'</span>,   []);
+<span class="keyword">if</span> nargin &amp;&amp; ischar(varargin{1})
+    gui_State.gui_Callback = str2func(varargin{1});
+<span class="keyword">end</span>
+
+<span class="keyword">if</span> nargout
+    [varargout{1:nargout}] = gui_mainfcn(gui_State, varargin{:});
+<span class="keyword">else</span>
+    gui_mainfcn(gui_State, varargin{:});
+<span class="keyword">end</span>
+<span class="comment">% End initialization code - DO NOT EDIT</span>
+
+
+<span class="comment">% --- Executes just before speaker_recognition is made visible.</span>
+<span class="keyword">function</span> speaker_recognition_OpeningFcn(hObject, eventdata, handles, varargin)
+<span class="comment">% This function has no output args, see OutputFcn.</span>
+<span class="comment">% hObject    handle to figure</span>
+<span class="comment">% eventdata  reserved - to be defined in a future version of MATLAB</span>
+<span class="comment">% handles    structure with handles and user data (see GUIDATA)</span>
+<span class="comment">% varargin   command line arguments to speaker_recognition (see VARARGIN)</span>
+
+<span class="comment">% Choose default command line output for speaker_recognition</span>
+handles.output = hObject;
+
+<span class="comment">% Update handles structure</span>
+guidata(hObject, handles);
+
+<span class="comment">% UIWAIT makes speaker_recognition wait for user response (see UIRESUME)</span>
+<span class="comment">% uiwait(handles.figure1);</span>
+
+
+<span class="comment">% --- Outputs from this function are returned to the command line.</span>
+<span class="keyword">function</span> varargout = speaker_recognition_OutputFcn(hObject, eventdata, handles)
+<span class="comment">% varargout  cell array for returning output args (see VARARGOUT);</span>
+<span class="comment">% hObject    handle to figure</span>
+<span class="comment">% eventdata  reserved - to be defined in a future version of MATLAB</span>
+<span class="comment">% handles    structure with handles and user data (see GUIDATA)</span>
+
+<span class="comment">% Get default command line output from handles structure</span>
+varargout{1} = handles.output;
+<span class="keyword">global</span> todayPresent;
+<span class="keyword">global</span> presentTodayData;
+todayPresent=0;
+presentTodayData=datetime(<span class="string">'today'</span>);
+presentTodayData=strcat(datestr(presentTodayData),<span class="string">'.csv'</span>);
+
+<span class="comment">% --- Executes on button press in helpButton.</span>
+<span class="keyword">function</span> helpButton_Callback(hObject, eventdata, handles)
+<span class="comment">% hObject    handle to helpButton (see GCBO)</span>
+<span class="comment">% eventdata  reserved - to be defined in a future version of MATLAB</span>
+<span class="comment">% handles    structure with handles and user data (see GUIDATA)</span>
+open(<span class="string">'Help.docx'</span>);
+
+<span class="comment">% --- Executes on button press in pushbutton2.</span>
+<span class="keyword">function</span> pushbutton2_Callback(hObject, eventdata, handles)
+<span class="comment">% hObject    handle to pushbutton2 (see GCBO)</span>
+<span class="comment">% eventdata  reserved - to be defined in a future version of MATLAB</span>
+<span class="comment">% handles    structure with handles and user data (see GUIDATA)</span>
+open(<span class="string">'about.txt'</span>);
+
+<span class="comment">% --- Executes on button press in recogRun.</span>
+<span class="keyword">function</span> recogRun_Callback(hObject, eventdata, handles)
+<span class="comment">% hObject    handle to recogRun (see GCBO)</span>
+<span class="comment">% eventdata  reserved - to be defined in a future version of MATLAB</span>
+<span class="comment">% handles    structure with handles and user data (see GUIDATA)</span>
+set(handles.stReg, <span class="string">'Visible'</span>, <span class="string">'Off'</span>);
+set(handles.stRegOutput, <span class="string">'Visible'</span>, <span class="string">'Off'</span>, <span class="string">'String'</span>, <span class="string">'YES'</span>, <span class="string">'ForegroundColor'</span>, <span class="string">'green'</span>);
+set(handles.stID, <span class="string">'Visible'</span>, <span class="string">'On'</span>);
+set(handles.stIDOutput, <span class="string">'Visible'</span>, <span class="string">'Off'</span>, <span class="string">'String'</span>, <span class="string">''</span>, <span class="string">'ForegroundColor'</span>, <span class="string">'green'</span>);
+set(handles.recogRun, <span class="string">'string'</span>, <span class="string">'Run again'</span>, <span class="string">'ForegroundColor'</span>, <span class="string">'blue'</span>, <span class="string">'enable'</span>, <span class="string">'on'</span>);
+set(handles.clAtt, <span class="string">'Visible'</span>, <span class="string">'Off'</span>);
+set(handles.clAttTot, <span class="string">'Visible'</span>, <span class="string">'Off'</span>, <span class="string">'String'</span>, <span class="string">''</span>, <span class="string">'ForegroundColor'</span>, <span class="string">'green'</span>);
+
+set(handles.recogRun, <span class="string">'string'</span>, <span class="string">'running'</span>, <span class="string">'enable'</span>, <span class="string">'off'</span>);
+set(handles.stopRec, <span class="string">'string'</span>, <span class="string">'Stop'</span>, <span class="string">'enable'</span>, <span class="string">'on'</span>);
+<span class="keyword">global</span> recObj;
+recObj=audiorecorder(44100, 8, 2);
+record(recObj);
+
+
+<span class="comment">% --- Executes on button press in trainButton.</span>
+<span class="keyword">function</span> trainButton_Callback(hObject, eventdata, handles)
+<span class="comment">% hObject    handle to trainButton (see GCBO)</span>
+<span class="comment">% eventdata  reserved - to be defined in a future version of MATLAB</span>
+<span class="comment">% handles    structure with handles and user data (see GUIDATA)</span>
+k = 16;                         <span class="comment">% number of centroids required</span>
+<span class="keyword">global</span> code;
+<span class="keyword">global</span> n;
+<span class="keyword">global</span> folder_name;
+<span class="comment">%tDir='C:/Users/tunch/Documents/MATLAB Projects/Speaker Recognition/data/train/'; %Change it according to your wish</span>
+tDir=folder_name;
+<span class="comment">%n=8;</span>
+<span class="keyword">for</span> i = 1:n                     <span class="comment">% train a VQ codebook for each speaker</span>
+    file = sprintf(<span class="string">'%ss%d.wav'</span>, tDir, i);
+    fprintf(file);
+
+    [s, fs] = audioread(file);
+
+    v = mfcc(s, fs);            <span class="comment">% Compute MFCC's</span>
+
+    code{i} = vqlbg(v, k);      <span class="comment">% Train VQ codebook</span>
+<span class="keyword">end</span>
+set(handles.statusText, <span class="string">'String'</span>, <span class="string">'Training Complete'</span>, <span class="string">'ForegroundColor'</span>, <span class="string">'green'</span>);
+
+
+<span class="comment">% --- Executes on button press in databaseButton.</span>
+<span class="keyword">function</span> databaseButton_Callback(hObject, eventdata, handles)
+<span class="comment">% hObject    handle to databaseButton (see GCBO)</span>
+<span class="comment">% eventdata  reserved - to be defined in a future version of MATLAB</span>
+<span class="comment">% handles    structure with handles and user data (see GUIDATA)</span>
+open(<span class="string">'database.txt'</span>);
+
+<span class="comment">% --- Executes on button press in exitButton.</span>
+<span class="keyword">function</span> exitButton_Callback(hObject, eventdata, handles)
+<span class="comment">% hObject    handle to exitButton (see GCBO)</span>
+<span class="comment">% eventdata  reserved - to be defined in a future version of MATLAB</span>
+<span class="comment">% handles    structure with handles and user data (see GUIDATA)</span>
+close <span class="string">all</span>;
+
+
+<span class="keyword">function</span> folderAddress_Callback(hObject, eventdata, handles)
+<span class="comment">% hObject    handle to folderAddress (see GCBO)</span>
+<span class="comment">% eventdata  reserved - to be defined in a future version of MATLAB</span>
+<span class="comment">% handles    structure with handles and user data (see GUIDATA)</span>
+
+<span class="comment">% Hints: get(hObject,'String') returns contents of folderAddress as text</span>
+<span class="comment">%        str2double(get(hObject,'String')) returns contents of folderAddress as a double</span>
+
+
+<span class="comment">% --- Executes during object creation, after setting all properties.</span>
+<span class="keyword">function</span> folderAddress_CreateFcn(hObject, eventdata, handles)
+<span class="comment">% hObject    handle to folderAddress (see GCBO)</span>
+<span class="comment">% eventdata  reserved - to be defined in a future version of MATLAB</span>
+<span class="comment">% handles    empty - handles not created until after all CreateFcns called</span>
+
+<span class="comment">% Hint: edit controls usually have a white background on Windows.</span>
+<span class="comment">%       See ISPC and COMPUTER.</span>
+<span class="keyword">if</span> ispc &amp;&amp; isequal(get(hObject,<span class="string">'BackgroundColor'</span>), get(0,<span class="string">'defaultUicontrolBackgroundColor'</span>))
+    set(hObject,<span class="string">'BackgroundColor'</span>,<span class="string">'white'</span>);
+<span class="keyword">end</span>
+
+
+<span class="comment">% --- Executes on button press in saveLoc.</span>
+<span class="keyword">function</span> saveLoc_Callback(hObject, eventdata, handles)
+<span class="comment">% hObject    handle to saveLoc (see GCBO)</span>
+<span class="comment">% eventdata  reserved - to be defined in a future version of MATLAB</span>
+<span class="comment">% handles    structure with handles and user data (see GUIDATA)</span>
+<span class="keyword">global</span> folder_name;
+set(handles.folderAddress, <span class="string">'String'</span>, folder_name);
+set(handles.statusText, <span class="string">'String'</span>, <span class="string">'Train location saved'</span>, <span class="string">'ForegroundColor'</span>, <span class="string">'red'</span>);
+
+
+<span class="comment">% --- Executes on button press in pushbutton8.</span>
+<span class="keyword">function</span> pushbutton8_Callback(hObject, eventdata, handles)
+<span class="comment">% hObject    handle to pushbutton8 (see GCBO)</span>
+<span class="comment">% eventdata  reserved - to be defined in a future version of MATLAB</span>
+<span class="comment">% handles    structure with handles and user data (see GUIDATA)</span>
+<span class="keyword">global</span> folder_name;
+folder_name = uigetdir;
+folder_name=strrep(folder_name, <span class="string">'\'</span>, <span class="string">'/'</span>);
+folder_name=strcat(folder_name,<span class="string">'/'</span>);
+
+
+
+<span class="keyword">function</span> noStudentsEdit_Callback(hObject, eventdata, handles)
+<span class="comment">% hObject    handle to noStudentsEdit (see GCBO)</span>
+<span class="comment">% eventdata  reserved - to be defined in a future version of MATLAB</span>
+<span class="comment">% handles    structure with handles and user data (see GUIDATA)</span>
+
+<span class="comment">% Hints: get(hObject,'String') returns contents of noStudentsEdit as text</span>
+<span class="comment">%        str2double(get(hObject,'String')) returns contents of noStudentsEdit as a double</span>
+
+
+<span class="comment">% --- Executes during object creation, after setting all properties.</span>
+<span class="keyword">function</span> noStudentsEdit_CreateFcn(hObject, eventdata, handles)
+<span class="comment">% hObject    handle to noStudentsEdit (see GCBO)</span>
+<span class="comment">% eventdata  reserved - to be defined in a future version of MATLAB</span>
+<span class="comment">% handles    empty - handles not created until after all CreateFcns called</span>
+
+<span class="comment">% Hint: edit controls usually have a white background on Windows.</span>
+<span class="comment">%       See ISPC and COMPUTER.</span>
+<span class="keyword">if</span> ispc &amp;&amp; isequal(get(hObject,<span class="string">'BackgroundColor'</span>), get(0,<span class="string">'defaultUicontrolBackgroundColor'</span>))
+    set(hObject,<span class="string">'BackgroundColor'</span>,<span class="string">'white'</span>);
+<span class="keyword">end</span>
+
+
+<span class="comment">% --- Executes on button press in noOfStudents.</span>
+<span class="keyword">function</span> noOfStudents_Callback(hObject, eventdata, handles)
+<span class="comment">% hObject    handle to noOfStudents (see GCBO)</span>
+<span class="comment">% eventdata  reserved - to be defined in a future version of MATLAB</span>
+<span class="comment">% handles    structure with handles and user data (see GUIDATA)</span>
+<span class="keyword">global</span> n;
+n=str2num(get(handles.noStudentsEdit, <span class="string">'String'</span>));
+set(handles.statusText, <span class="string">'String'</span>, <span class="string">'Student no. saved'</span>, <span class="string">'ForegroundColor'</span>, <span class="string">'blue'</span>);
+
+
+<span class="comment">% --- Executes on button press in stopRec.</span>
+<span class="keyword">function</span> stopRec_Callback(hObject, eventdata, handles)
+<span class="comment">% hObject    handle to stopRec (see GCBO)</span>
+<span class="comment">% eventdata  reserved - to be defined in a future version of MATLAB</span>
+<span class="comment">% handles    structure with handles and user data (see GUIDATA)</span>
+set(handles.recogRun, <span class="string">'string'</span>, <span class="string">'Recorded'</span>, <span class="string">'ForegroundColor'</span>, <span class="string">'blue'</span>, <span class="string">'enable'</span>, <span class="string">'on'</span>);
+set(handles.stopRec, <span class="string">'string'</span>, <span class="string">'Stop'</span>, <span class="string">'enable'</span>, <span class="string">'off'</span>);
+
+<span class="keyword">global</span> recObj;
+<span class="keyword">global</span> fname;
+<span class="keyword">global</span> todayPresent;
+<span class="keyword">global</span> presentTodayData;
+fname=<span class="string">'record.wav'</span>;
+stop(recObj);
+[y, fs]=audioread(fname);
+y=y(:,1);
+dt=1/fs;
+t=0:dt:(length(y)*dt)-dt;
+figure;
+plot(t,y);
+title(<span class="string">'Audio sample of student in time domain'</span>);
+xlabel(<span class="string">'Seconds'</span>);
+ylabel(<span class="string">'Amplitude'</span>);
+figure;
+plot(psd(spectrum.periodogram,y,<span class="string">'Fs'</span>,fs,<span class="string">'NFFT'</span>,length(y)));
+myRecMat=getaudiodata(recObj);
+<span class="comment">%sound(myRecMat, 44100);</span>
+audiowrite(fname, myRecMat, 44100);
+<span class="keyword">global</span> code;
+file = sprintf(fname);
+[s, fs] = audioread(file);
+v = mfcc(s, fs);            <span class="comment">% Compute MFCC's</span>
+distmin = inf;
+k1 = 0;
+<span class="keyword">for</span> l = 1:length(code)      <span class="comment">% each trained codebook, compute distortion</span>
+    d = disteu(v, code{l});
+    dist = sum(min(d,[],2)) / size(d,1);
+    <span class="keyword">if</span> dist &lt; distmin
+        distmin = dist;
+        k1 = l;
+    <span class="keyword">end</span>
+<span class="keyword">end</span>
+<span class="keyword">if</span>(k1==0)
+    set(handles.stReg, <span class="string">'Visible'</span>, <span class="string">'On'</span>);
+    set(handles.stRegOutput, <span class="string">'Visible'</span>, <span class="string">'On'</span>, <span class="string">'String'</span>, <span class="string">'NO'</span>, <span class="string">'ForegroundColor'</span>, <span class="string">'red'</span>);
+    set(handles.stID, <span class="string">'Visible'</span>, <span class="string">'On'</span>);
+    set(handles.stIDOutput, <span class="string">'Visible'</span>, <span class="string">'On'</span>, <span class="string">'String'</span>, <span class="string">'NOT FOUND'</span>, <span class="string">'ForegroundColor'</span>, <span class="string">'red'</span>);
+
+<span class="keyword">else</span>
+    T=csvread(<span class="string">'database.csv'</span>);
+    IDNo=T(k1,2);
+    <span class="keyword">if</span>(length(todayPresent)==1)
+        todayPresent(end+1)=IDNo;
+        CLAttended=T(k1,3)+1;
+        T(k1,3) = CLAttended;
+        <span class="comment">%T = readtable('database.txt', 'Delimiter', ' ', 'ReadVariableNames', false);</span>
+        <span class="comment">%IDNo=T{k1,2}; %needs change for attendance count</span>
+        <span class="comment">%fileID=fopen('database.txt');</span>
+        <span class="comment">%A=fread(fileID);</span>
+        set(handles.stReg, <span class="string">'Visible'</span>, <span class="string">'On'</span>);
+        set(handles.stRegOutput, <span class="string">'Visible'</span>, <span class="string">'On'</span>, <span class="string">'String'</span>, <span class="string">'YES'</span>, <span class="string">'ForegroundColor'</span>, <span class="string">'green'</span>);
+        set(handles.stID, <span class="string">'Visible'</span>, <span class="string">'On'</span>);
+        set(handles.stIDOutput, <span class="string">'Visible'</span>, <span class="string">'On'</span>, <span class="string">'String'</span>, num2str(IDNo), <span class="string">'ForegroundColor'</span>, <span class="string">'green'</span>);
+        set(handles.recogRun, <span class="string">'string'</span>, <span class="string">'Run again'</span>, <span class="string">'ForegroundColor'</span>, <span class="string">'blue'</span>, <span class="string">'enable'</span>, <span class="string">'on'</span>);
+        set(handles.clAtt, <span class="string">'Visible'</span>, <span class="string">'On'</span>);
+        set(handles.clAttTot, <span class="string">'Visible'</span>, <span class="string">'On'</span>, <span class="string">'String'</span>, num2str(CLAttended), <span class="string">'ForegroundColor'</span>, <span class="string">'green'</span>);
+        dlmwrite(<span class="string">'database.csv'</span>,T,<span class="string">'precision'</span>,10);
+        dlmwrite(presentTodayData,todayPresent,<span class="string">'precision'</span>,10);
+    <span class="keyword">else</span>
+        chProxy=ismember(IDNo, todayPresent);
+        <span class="keyword">if</span>(chProxy==1)
+            set(handles.statusText, <span class="string">'String'</span>, <span class="string">'PROXY ALERT!!'</span>, <span class="string">'ForegroundColor'</span>, <span class="string">'red'</span>);
+            set(handles.clAttTot, <span class="string">'Visible'</span>, <span class="string">'On'</span>, <span class="string">'String'</span>, <span class="string">'PROXY ALERT!!'</span>, <span class="string">'ForegroundColor'</span>, <span class="string">'red'</span>);
+            set(handles.stRegOutput, <span class="string">'Visible'</span>, <span class="string">'On'</span>, <span class="string">'String'</span>, <span class="string">'PROXY ALERT!!'</span>, <span class="string">'ForegroundColor'</span>, <span class="string">'red'</span>);
+            set(handles.stIDOutput, <span class="string">'Visible'</span>, <span class="string">'On'</span>, <span class="string">'String'</span>, <span class="string">'PROXY ALERT!!'</span>, <span class="string">'ForegroundColor'</span>, <span class="string">'red'</span>);
+        <span class="keyword">else</span>
+            todayPresent(end+1)=IDNo;
+            CLAttended=T(k1,3)+1;
+            T(k1,3) = CLAttended;
+            <span class="comment">%T = readtable('database.txt', 'Delimiter', ' ', 'ReadVariableNames', false);</span>
+            <span class="comment">%IDNo=T{k1,2}; %needs change for attendance count</span>
+            <span class="comment">%fileID=fopen('database.txt');</span>
+            <span class="comment">%A=fread(fileID);</span>
+            set(handles.stReg, <span class="string">'Visible'</span>, <span class="string">'On'</span>);
+            set(handles.stRegOutput, <span class="string">'Visible'</span>, <span class="string">'On'</span>, <span class="string">'String'</span>, <span class="string">'YES'</span>, <span class="string">'ForegroundColor'</span>, <span class="string">'green'</span>);
+            set(handles.stID, <span class="string">'Visible'</span>, <span class="string">'On'</span>);
+            set(handles.stIDOutput, <span class="string">'Visible'</span>, <span class="string">'On'</span>, <span class="string">'String'</span>, num2str(IDNo), <span class="string">'ForegroundColor'</span>, <span class="string">'green'</span>);
+            set(handles.recogRun, <span class="string">'string'</span>, <span class="string">'Run again'</span>, <span class="string">'ForegroundColor'</span>, <span class="string">'blue'</span>, <span class="string">'enable'</span>, <span class="string">'on'</span>);
+            set(handles.clAtt, <span class="string">'Visible'</span>, <span class="string">'On'</span>);
+            set(handles.clAttTot, <span class="string">'Visible'</span>, <span class="string">'On'</span>, <span class="string">'String'</span>, num2str(CLAttended), <span class="string">'ForegroundColor'</span>, <span class="string">'green'</span>);
+            dlmwrite(<span class="string">'database.csv'</span>,T,<span class="string">'precision'</span>,10);
+            dlmwrite(presentTodayData,todayPresent,<span class="string">'precision'</span>,10);
+        <span class="keyword">end</span>
+    <span class="keyword">end</span>
+<span class="keyword">end</span>
+clear <span class="string">recObj</span> <span class="string">myRecMat</span>;
+</pre><img vspace="5" hspace="5" src="speaker_recognition_01.png" alt=""> <p class="footer"><br><a href="http://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2016b</a><br></p></div><!--
+##### SOURCE BEGIN #####
+function varargout = speaker_recognition(varargin)
+% SPEAKER_RECOGNITION MATLAB code for speaker_recognition.fig
+%      SPEAKER_RECOGNITION, by itself, creates a new SPEAKER_RECOGNITION or raises the existing
+%      singleton*.
+%
+%      H = SPEAKER_RECOGNITION returns the handle to a new SPEAKER_RECOGNITION or the handle to
+%      the existing singleton*.
+%
+%      SPEAKER_RECOGNITION('CALLBACK',hObject,eventData,handles,...) calls the local
+%      function named CALLBACK in SPEAKER_RECOGNITION.M with the given input arguments.
+%
+%      SPEAKER_RECOGNITION('Property','Value',...) creates a new SPEAKER_RECOGNITION or raises the
+%      existing singleton*.  Starting from the left, property value pairs are
+%      applied to the GUI before speaker_recognition_OpeningFcn gets called.  An
+%      unrecognized property name or invalid value makes property application
+%      stop.  All inputs are passed to speaker_recognition_OpeningFcn via varargin.
+%
+%      *See GUI Options on GUIDE's Tools menu.  Choose "GUI allows only one
+%      instance to run (singleton)".
+%
+% See also: GUIDE, GUIDATA, GUIHANDLES
+
+% Edit the above text to modify the response to help speaker_recognition
+
+% Last Modified by GUIDE v2.5 22-Jan-2017 12:26:21
+
+% Begin initialization code - DO NOT EDIT
+gui_Singleton = 1;
+gui_State = struct('gui_Name',       mfilename, ...
+                   'gui_Singleton',  gui_Singleton, ...
+                   'gui_OpeningFcn', @speaker_recognition_OpeningFcn, ...
+                   'gui_OutputFcn',  @speaker_recognition_OutputFcn, ...
+                   'gui_LayoutFcn',  [] , ...
+                   'gui_Callback',   []);
+if nargin && ischar(varargin{1})
+    gui_State.gui_Callback = str2func(varargin{1});
+end
+
+if nargout
+    [varargout{1:nargout}] = gui_mainfcn(gui_State, varargin{:});
+else
+    gui_mainfcn(gui_State, varargin{:});
+end
+% End initialization code - DO NOT EDIT
+
+
+% REPLACE_WITH_DASH_DASH- Executes just before speaker_recognition is made visible.
+function speaker_recognition_OpeningFcn(hObject, eventdata, handles, varargin)
+% This function has no output args, see OutputFcn.
+% hObject    handle to figure
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+% varargin   command line arguments to speaker_recognition (see VARARGIN)
+
+% Choose default command line output for speaker_recognition
+handles.output = hObject;
+
+% Update handles structure
+guidata(hObject, handles);
+ 
+% UIWAIT makes speaker_recognition wait for user response (see UIRESUME)
+% uiwait(handles.figure1);
+
+
+% REPLACE_WITH_DASH_DASH- Outputs from this function are returned to the command line.
+function varargout = speaker_recognition_OutputFcn(hObject, eventdata, handles) 
+% varargout  cell array for returning output args (see VARARGOUT);
+% hObject    handle to figure
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Get default command line output from handles structure
+varargout{1} = handles.output;
+global todayPresent;
+global presentTodayData;
+todayPresent=0;
+presentTodayData=datetime('today');
+presentTodayData=strcat(datestr(presentTodayData),'.csv');
+
+% REPLACE_WITH_DASH_DASH- Executes on button press in helpButton.
+function helpButton_Callback(hObject, eventdata, handles)
+% hObject    handle to helpButton (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+open('Help.docx');
+
+% REPLACE_WITH_DASH_DASH- Executes on button press in pushbutton2.
+function pushbutton2_Callback(hObject, eventdata, handles)
+% hObject    handle to pushbutton2 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+open('about.txt');
+
+% REPLACE_WITH_DASH_DASH- Executes on button press in recogRun.
+function recogRun_Callback(hObject, eventdata, handles)
+% hObject    handle to recogRun (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+set(handles.stReg, 'Visible', 'Off');
+set(handles.stRegOutput, 'Visible', 'Off', 'String', 'YES', 'ForegroundColor', 'green');
+set(handles.stID, 'Visible', 'On');
+set(handles.stIDOutput, 'Visible', 'Off', 'String', '', 'ForegroundColor', 'green');
+set(handles.recogRun, 'string', 'Run again', 'ForegroundColor', 'blue', 'enable', 'on');
+set(handles.clAtt, 'Visible', 'Off');
+set(handles.clAttTot, 'Visible', 'Off', 'String', '', 'ForegroundColor', 'green');
+
+set(handles.recogRun, 'string', 'running', 'enable', 'off');
+set(handles.stopRec, 'string', 'Stop', 'enable', 'on');
+global recObj;
+recObj=audiorecorder(44100, 8, 2);
+record(recObj);
+
+
+% REPLACE_WITH_DASH_DASH- Executes on button press in trainButton.
+function trainButton_Callback(hObject, eventdata, handles)
+% hObject    handle to trainButton (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+k = 16;                         % number of centroids required
+global code;
+global n;
+global folder_name;
+%tDir='C:/Users/tunch/Documents/MATLAB Projects/Speaker Recognition/data/train/'; %Change it according to your wish
+tDir=folder_name;
+%n=8;
+for i = 1:n                     % train a VQ codebook for each speaker
+    file = sprintf('%ss%d.wav', tDir, i);           
+    fprintf(file);
+   
+    [s, fs] = audioread(file);
+    
+    v = mfcc(s, fs);            % Compute MFCC's
+   
+    code{i} = vqlbg(v, k);      % Train VQ codebook
+end
+set(handles.statusText, 'String', 'Training Complete', 'ForegroundColor', 'green');
+
+
+% REPLACE_WITH_DASH_DASH- Executes on button press in databaseButton.
+function databaseButton_Callback(hObject, eventdata, handles)
+% hObject    handle to databaseButton (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+open('database.txt');
+
+% REPLACE_WITH_DASH_DASH- Executes on button press in exitButton.
+function exitButton_Callback(hObject, eventdata, handles)
+% hObject    handle to exitButton (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+close all;
+
+
+function folderAddress_Callback(hObject, eventdata, handles)
+% hObject    handle to folderAddress (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: get(hObject,'String') returns contents of folderAddress as text
+%        str2double(get(hObject,'String')) returns contents of folderAddress as a double
+
+
+% REPLACE_WITH_DASH_DASH- Executes during object creation, after setting all properties.
+function folderAddress_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to folderAddress (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: edit controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+
+% REPLACE_WITH_DASH_DASH- Executes on button press in saveLoc.
+function saveLoc_Callback(hObject, eventdata, handles)
+% hObject    handle to saveLoc (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+global folder_name;
+set(handles.folderAddress, 'String', folder_name);
+set(handles.statusText, 'String', 'Train location saved', 'ForegroundColor', 'red');
+
+
+% REPLACE_WITH_DASH_DASH- Executes on button press in pushbutton8.
+function pushbutton8_Callback(hObject, eventdata, handles)
+% hObject    handle to pushbutton8 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+global folder_name;
+folder_name = uigetdir;
+folder_name=strrep(folder_name, '\', '/');
+folder_name=strcat(folder_name,'/');
+
+
+
+function noStudentsEdit_Callback(hObject, eventdata, handles)
+% hObject    handle to noStudentsEdit (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: get(hObject,'String') returns contents of noStudentsEdit as text
+%        str2double(get(hObject,'String')) returns contents of noStudentsEdit as a double
+
+
+% REPLACE_WITH_DASH_DASH- Executes during object creation, after setting all properties.
+function noStudentsEdit_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to noStudentsEdit (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: edit controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+
+% REPLACE_WITH_DASH_DASH- Executes on button press in noOfStudents.
+function noOfStudents_Callback(hObject, eventdata, handles)
+% hObject    handle to noOfStudents (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+global n;
+n=str2num(get(handles.noStudentsEdit, 'String'));
+set(handles.statusText, 'String', 'Student no. saved', 'ForegroundColor', 'blue');
+
+
+% REPLACE_WITH_DASH_DASH- Executes on button press in stopRec.
+function stopRec_Callback(hObject, eventdata, handles)
+% hObject    handle to stopRec (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+set(handles.recogRun, 'string', 'Recorded', 'ForegroundColor', 'blue', 'enable', 'on');
+set(handles.stopRec, 'string', 'Stop', 'enable', 'off');
+
+global recObj;
+global fname;
+global todayPresent;
+global presentTodayData;
+fname='record.wav';
+stop(recObj);
+[y, fs]=audioread(fname);
+y=y(:,1);
+dt=1/fs;
+t=0:dt:(length(y)*dt)-dt;
+figure;
+plot(t,y);
+title('Audio sample of student in time domain');
+xlabel('Seconds');
+ylabel('Amplitude');
+figure;
+plot(psd(spectrum.periodogram,y,'Fs',fs,'NFFT',length(y)));
+myRecMat=getaudiodata(recObj);
+%sound(myRecMat, 44100);
+audiowrite(fname, myRecMat, 44100);
+global code;
+file = sprintf(fname);
+[s, fs] = audioread(file);      
+v = mfcc(s, fs);            % Compute MFCC's
+distmin = inf;
+k1 = 0;
+for l = 1:length(code)      % each trained codebook, compute distortion
+    d = disteu(v, code{l}); 
+    dist = sum(min(d,[],2)) / size(d,1);
+    if dist < distmin
+        distmin = dist;
+        k1 = l;
+    end      
+end
+if(k1==0)
+    set(handles.stReg, 'Visible', 'On');
+    set(handles.stRegOutput, 'Visible', 'On', 'String', 'NO', 'ForegroundColor', 'red');
+    set(handles.stID, 'Visible', 'On');
+    set(handles.stIDOutput, 'Visible', 'On', 'String', 'NOT FOUND', 'ForegroundColor', 'red');
+
+else
+    T=csvread('database.csv');
+    IDNo=T(k1,2);
+    if(length(todayPresent)==1)
+        todayPresent(end+1)=IDNo;
+        CLAttended=T(k1,3)+1;
+        T(k1,3) = CLAttended;
+        %T = readtable('database.txt', 'Delimiter', ' ', 'ReadVariableNames', false);
+        %IDNo=T{k1,2}; %needs change for attendance count
+        %fileID=fopen('database.txt');
+        %A=fread(fileID);
+        set(handles.stReg, 'Visible', 'On');
+        set(handles.stRegOutput, 'Visible', 'On', 'String', 'YES', 'ForegroundColor', 'green');
+        set(handles.stID, 'Visible', 'On');
+        set(handles.stIDOutput, 'Visible', 'On', 'String', num2str(IDNo), 'ForegroundColor', 'green');
+        set(handles.recogRun, 'string', 'Run again', 'ForegroundColor', 'blue', 'enable', 'on');
+        set(handles.clAtt, 'Visible', 'On');
+        set(handles.clAttTot, 'Visible', 'On', 'String', num2str(CLAttended), 'ForegroundColor', 'green');
+        dlmwrite('database.csv',T,'precision',10);
+        dlmwrite(presentTodayData,todayPresent,'precision',10);
+    else
+        chProxy=ismember(IDNo, todayPresent);
+        if(chProxy==1)
+            set(handles.statusText, 'String', 'PROXY ALERT!!', 'ForegroundColor', 'red');
+            set(handles.clAttTot, 'Visible', 'On', 'String', 'PROXY ALERT!!', 'ForegroundColor', 'red');
+            set(handles.stRegOutput, 'Visible', 'On', 'String', 'PROXY ALERT!!', 'ForegroundColor', 'red');            
+            set(handles.stIDOutput, 'Visible', 'On', 'String', 'PROXY ALERT!!', 'ForegroundColor', 'red');
+        else
+            todayPresent(end+1)=IDNo;       
+            CLAttended=T(k1,3)+1;
+            T(k1,3) = CLAttended;
+            %T = readtable('database.txt', 'Delimiter', ' ', 'ReadVariableNames', false);
+            %IDNo=T{k1,2}; %needs change for attendance count
+            %fileID=fopen('database.txt');
+            %A=fread(fileID);
+            set(handles.stReg, 'Visible', 'On');
+            set(handles.stRegOutput, 'Visible', 'On', 'String', 'YES', 'ForegroundColor', 'green');
+            set(handles.stID, 'Visible', 'On');
+            set(handles.stIDOutput, 'Visible', 'On', 'String', num2str(IDNo), 'ForegroundColor', 'green');
+            set(handles.recogRun, 'string', 'Run again', 'ForegroundColor', 'blue', 'enable', 'on');
+            set(handles.clAtt, 'Visible', 'On');
+            set(handles.clAttTot, 'Visible', 'On', 'String', num2str(CLAttended), 'ForegroundColor', 'green');
+            dlmwrite('database.csv',T,'precision',10);
+            dlmwrite(presentTodayData,todayPresent,'precision',10);
+        end
+    end
+end
+clear recObj myRecMat;
+
+##### SOURCE END #####
+--></body></html>
