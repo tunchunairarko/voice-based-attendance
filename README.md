@@ -1,2 +1,3 @@
 # voice-based-attendance
-A MATLAB prototype of voice based attendance system
+The complete version of the program is not shared due to commercial restrictions.
+A MATLAB prototype of the developed voice based attendance system is given here
